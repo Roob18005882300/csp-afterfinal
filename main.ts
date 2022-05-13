@@ -1,5 +1,6 @@
 namespace SpriteKind {
     export const Player_Cos = SpriteKind.create()
+    export const Image_Scene = SpriteKind.create()
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (Jump_CNT == 0) {
@@ -32,16 +33,6 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
         c c c c c c c c c c c c c c . . 
         c c c c c c c c c c c c c c . . 
         `)
-    HeadBand_COS.setImage(img`
-        . . . . . . . . 
-        . . . . . . . . 
-        . . . 2 2 2 2 . 
-        . . 2 . . . . . 
-        2 2 2 2 2 2 2 . 
-        2 2 2 . . . . 2 
-        . . . . . . . . 
-        . . . . . . . . 
-        `)
 })
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     PlayerChar.setImage(img`
@@ -62,22 +53,11 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
         . . c c c c c c c c c c c c c c 
         . . c c c c c c c c c c c c c c 
         `)
-    HeadBand_COS.setImage(img`
-        . . . . . . . . 
-        . . . . . . . . 
-        . 2 2 2 2 . . . 
-        . . . . . 2 . . 
-        . 2 2 2 2 2 2 2 
-        2 . . . . 2 2 2 
-        . . . . . . . . 
-        . . . . . . . . 
-        `)
 })
 function FollowController () {
-    HeadBand_COS.setPosition(PlayerChar.x - 9, PlayerChar.y - 5)
+	
 }
 let Jump_CNT = 0
-let HeadBand_COS: Sprite = null
 let PlayerChar: Sprite = null
 tiles.setCurrentTilemap(tilemap`BeginnerLvl`)
 PlayerChar = sprites.create(img`
@@ -98,21 +78,18 @@ PlayerChar = sprites.create(img`
     . . c c c c c c c c c c c c c c 
     . . c c c c c c c c c c c c c c 
     `, SpriteKind.Player)
-HeadBand_COS = sprites.create(img`
-    . . . . . . . . . . 
-    . . . . . . . . . . 
-    . . . 2 2 2 2 . . . 
-    . . . . . . . 2 . . 
-    . . . 2 2 2 2 2 2 2 
-    . . 2 . . . . 2 2 2 
-    . . . . . . . . . . 
-    . . . . . . . . . . 
-    `, SpriteKind.Player_Cos)
 scene.cameraFollowSprite(PlayerChar)
-controller.moveSprite(PlayerChar, 100, 0)
 Jump_CNT = 0
+controller.moveSprite(PlayerChar, 60, 0)
 forever(function () {
     JumpInhibit()
     FollowController()
     PlayerChar.ay = 1150
+})
+forever(function () {
+    if (PlayerChar.vx > 25) {
+        PlayerChar.ax = 0
+    } else if (PlayerChar.vx < -25) {
+        PlayerChar.ax = 0
+    }
 })
