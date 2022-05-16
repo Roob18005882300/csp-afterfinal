@@ -4,14 +4,18 @@ namespace SpriteKind {
 }
 controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
     if (Jump_CNT == 0) {
-        PlayerChar.setVelocity(0, -250)
+        PlayerChar.vy = -300
         Jump_CNT += 1
     }
 })
 function JumpInhibit () {
     if (Jump_CNT >= 1) {
-        pause(500)
-        Jump_CNT = 0
+        if (Jump_CNT == 1) {
+            pause(500)
+            Jump_CNT = 0
+        } else {
+            PlayerChar.setVelocity(0, 0)
+        }
     }
 }
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
@@ -78,13 +82,18 @@ PlayerChar = sprites.create(img`
     . . c c c c c c c c c c c c c c 
     . . c c c c c c c c c c c c c c 
     `, SpriteKind.Player)
-scene.cameraFollowSprite(PlayerChar)
+PlayerChar.setPosition(4, 200)
 Jump_CNT = 0
 controller.moveSprite(PlayerChar, 60, 0)
+pause(1000)
+scene.cameraFollowSprite(PlayerChar)
 forever(function () {
     JumpInhibit()
     FollowController()
-    PlayerChar.ay = 1150
+    PlayerChar.ay = 1000
+})
+forever(function () {
+    info.setScore(PlayerChar.y)
 })
 forever(function () {
     if (PlayerChar.vx > 25) {
