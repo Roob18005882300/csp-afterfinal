@@ -3,7 +3,9 @@
     "description": "",
     "dependencies": {
         "device": "*",
-        "controller": "*"
+        "controller": "*",
+        "animation": "*",
+        "pxt-button-combos": "github:jwunderl/pxt-button-combos#v0.0.24"
     },
     "files": [
         "main.blocks",
@@ -17,7 +19,7 @@
         "test.ts"
     ],
     "targetVersions": {
-        "target": "1.8.22",
+        "target": "1.8.23",
         "targetId": "arcade"
     },
     "supportedTargets": [
