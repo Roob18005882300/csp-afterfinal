@@ -190,6 +190,9 @@ function FollowController () {
 controller.A.onEvent(ControllerButtonEvent.Released, function () {
     Auto = 0
 })
+sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
+    game.over(false)
+})
 sprites.onOverlap(SpriteKind.Weapon, SpriteKind.Enemy, function (sprite, otherSprite) {
     if (Attack_Prog > 0) {
         if (Face == 0) {
@@ -513,6 +516,9 @@ function Gun_Fire () {
 sprites.onCreated(SpriteKind.Projectile, function (sprite) {
     sprite.setFlag(SpriteFlag.AutoDestroy, true)
 })
+sprites.onDestroyed(SpriteKind.Enemy, function (sprite) {
+    Round_left.shift()
+})
 function Sword_Anims () {
     if (Face == 0) {
         animation.runImageAnimation(
@@ -825,12 +831,8 @@ function Sword_Anims () {
         )
     }
 }
-sprites.onDestroyed(SpriteKind.Player, function (sprite) {
-    Round_left.shift()
-})
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     otherSprite.setKind(SpriteKind.Body)
-    Round_left.pop()
     sprite.destroy()
     if (Face == 0) {
         animation.runImageAnimation(
@@ -1061,36 +1063,10 @@ sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, oth
     pause(1000)
     otherSprite.destroy()
 })
-controller.combos.attachCombo("A + B", function () {
-    Zomb = sprites.create(img`
-        ....................
-        ....................
-        ....................
-        ....................
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        ..7777777777777777..
-        `, SpriteKind.Enemy)
-    Zomb.setPosition(PlayerChar.x + 30, PlayerChar.y - 15)
-})
 let BULLET: Sprite = null
 let Attack_Prog = 0
 let Auto = 0
 let Round_left: Sprite[] = []
-let Zomb: Sprite = null
 let Face = 0
 let Rifle: Sprite = null
 let Sword_Sprite: Sprite = null
@@ -1153,7 +1129,7 @@ Rifle = sprites.create(img`
     `, SpriteKind.Gun)
 controller.moveSprite(PlayerChar, 60, 0)
 Face = 0
-Zomb = sprites.create(img`
+let Zomb = sprites.create(img`
     7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
     7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
     7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
@@ -1172,6 +1148,7 @@ Zomb = sprites.create(img`
     7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
     `, SpriteKind.Enemy)
 Round_left = []
+let Round = 1
 forever(function () {
     if (Item_Var == 0) {
         if (Face == 0) {
@@ -1186,6 +1163,35 @@ forever(function () {
         } else if (Face == 1) {
             Rifle.setPosition(PlayerChar.x + -10, PlayerChar.y + 3)
         }
+    }
+})
+forever(function () {
+    for (let index = 0; index < Round * 10; index++) {
+        pause(randint(500, 3000))
+        Zomb = sprites.create(img`
+            ....................
+            ....................
+            ....................
+            ....................
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            ..7777777777777777..
+            `, SpriteKind.Enemy)
+        Zomb.setPosition(PlayerChar.x + randint(-200, 500), PlayerChar.y - 50)
+        Zomb.follow(PlayerChar, 50)
     }
 })
 forever(function () {
@@ -1209,4 +1215,7 @@ forever(function () {
         pause(500)
         Attack_Prog = 0
     }
+})
+forever(function () {
+	
 })
