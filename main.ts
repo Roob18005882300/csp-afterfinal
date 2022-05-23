@@ -184,9 +184,6 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
             `)
     }
 })
-function FollowController () {
-	
-}
 controller.A.onEvent(ControllerButtonEvent.Released, function () {
     Auto = 0
 })
@@ -834,6 +831,7 @@ function Sword_Anims () {
 sprites.onOverlap(SpriteKind.Projectile, SpriteKind.Enemy, function (sprite, otherSprite) {
     otherSprite.setKind(SpriteKind.Body)
     sprite.destroy()
+    otherSprite.follow(PlayerChar, 0)
     if (Face == 0) {
         animation.runImageAnimation(
         otherSprite,
@@ -1147,6 +1145,7 @@ let Zomb = sprites.create(img`
     7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
     7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 7 
     `, SpriteKind.Enemy)
+Zomb.destroy()
 Round_left = []
 let Round = 1
 forever(function () {
@@ -1190,13 +1189,17 @@ forever(function () {
             ..7777777777777777..
             ..7777777777777777..
             `, SpriteKind.Enemy)
-        Zomb.setPosition(PlayerChar.x + randint(-200, 500), PlayerChar.y - 50)
-        Zomb.follow(PlayerChar, 50)
+        Zomb.setPosition(PlayerChar.x + randint(100, 500), PlayerChar.y - 50)
+        Zomb.follow(PlayerChar, 35)
+    }
+})
+forever(function () {
+    if (true) {
+    	
     }
 })
 forever(function () {
     JumpInhibit()
-    FollowController()
     PlayerChar.ay = 1000
     Zomb.ay = 1000
 })
