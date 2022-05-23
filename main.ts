@@ -4,6 +4,7 @@ namespace SpriteKind {
     export const Weapon = SpriteKind.create()
     export const Gun = SpriteKind.create()
     export const Body = SpriteKind.create()
+    export const FFPlayer = SpriteKind.create()
 }
 sprites.onCreated(SpriteKind.Enemy, function (sprite) {
     Round_left.push(sprite)
@@ -130,6 +131,9 @@ controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
             `)
     }
 })
+sprites.onDestroyed(SpriteKind.Body, function (sprite) {
+    Round_left.shift()
+})
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     Face = 0
     PlayerChar.setImage(img`
@@ -188,7 +192,13 @@ controller.A.onEvent(ControllerButtonEvent.Released, function () {
     Auto = 0
 })
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.Player, function (sprite, otherSprite) {
-    game.over(false)
+    info.changeLifeBy(-20)
+    if (info.life() <= 0) {
+        game.over(false)
+    }
+    PlayerChar.setKind(SpriteKind.FFPlayer)
+    pause(1000)
+    PlayerChar.setKind(SpriteKind.Player)
 })
 sprites.onOverlap(SpriteKind.Weapon, SpriteKind.Enemy, function (sprite, otherSprite) {
     if (Attack_Prog > 0) {
@@ -463,6 +473,9 @@ sprites.onOverlap(SpriteKind.Weapon, SpriteKind.Enemy, function (sprite, otherSp
         }
     }
 })
+scene.onOverlapTile(SpriteKind.Player, assets.tile`DOOR_TILE`, function (sprite, location) {
+    game.over(true)
+})
 function Gun_Fire () {
     if (Face == 0) {
         Rifle.setImage(img`
@@ -512,9 +525,6 @@ function Gun_Fire () {
 }
 sprites.onCreated(SpriteKind.Projectile, function (sprite) {
     sprite.setFlag(SpriteFlag.AutoDestroy, true)
-})
-sprites.onDestroyed(SpriteKind.Enemy, function (sprite) {
-    Round_left.shift()
 })
 function Sword_Anims () {
     if (Face == 0) {
@@ -1090,6 +1100,7 @@ PlayerChar = sprites.create(img`
     . . c c c c c c c c c c c c c c 
     . . c c c c c c c c c c c c c c 
     `, SpriteKind.Player)
+info.setLife(100)
 scene.cameraFollowSprite(PlayerChar)
 PlayerChar.setPosition(4, 200)
 Jump_CNT = 0
@@ -1194,17 +1205,12 @@ forever(function () {
     }
 })
 forever(function () {
-    if (true) {
-    	
-    }
+    info.setScore(Round_left.length)
 })
 forever(function () {
     JumpInhibit()
     PlayerChar.ay = 1000
     Zomb.ay = 1000
-})
-forever(function () {
-    info.setScore(Round_left.length)
 })
 forever(function () {
     if (PlayerChar.vx > 25) {
